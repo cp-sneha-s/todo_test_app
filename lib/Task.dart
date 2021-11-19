@@ -7,7 +7,7 @@ final String columnTitle = 'title';
 final String columnDone = 'done';
 
 class Task extends ChangeNotifier {
-  List<Task> taskList =[];
+  List<Task> taskList ;
   int id;
   bool done;
   String title;
@@ -30,28 +30,27 @@ class Task extends ChangeNotifier {
     title = map[columnTitle];
     done = map[columnDone] == 1;
   }
+  void toggleDone(bool done){
+    done = !done;
+    notifyListeners();
+  }
 
   void addTask(String tasktitle){
     DatabaseHelper.instance.insert(Task(done: false,title: tasktitle));
     notifyListeners();
   }
 
-// get tasks async{
-//     if(taskList== null){
-//       taskList = await DatabaseHelper.instance.getAllTasks();
-//       notifyListeners();
-//     }
-//     return taskList;
-//   }
+ void deletetask(int index){
+    DatabaseHelper.instance.deleteTask(index);
+    notifyListeners();
+ }
 
   List<Task> getTaskList(){
-
     DatabaseHelper.instance.getAllTasks().then((value) {
-      taskList= value;
+      this.taskList= value;
       notifyListeners();
-      return taskList;
-
-    });
+      print ('got tasklist');
+    });      return taskList;
 
   }
 }
