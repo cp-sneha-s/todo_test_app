@@ -5,6 +5,7 @@ import 'package:flutter_todo_app/Task.dart';
 import 'package:flutter_todo_app/ToDoPage.dart';
 import 'package:provider/provider.dart';
 
+
 class AddTaskPage extends StatefulWidget {
   @override
   _AddTaskPageState createState() => _AddTaskPageState();
@@ -12,7 +13,7 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final addTaskController = TextEditingController();
-  final description = TextEditingController();
+
 
   @override
   void dispose() {
@@ -95,16 +96,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     });
                               } else {
                                 {
-                                  // setState(() {
-                                  //   print('task:' +
-                                  //       addTaskController.text.toString());
-                                  //   DatabaseHelper.instance.insert(Task(
-                                  //       done: false,
-                                  //       title:
-                                  //           addTaskController.text.toString()));
-                                  // });
                                   task.addTask(addTaskController.text.toString());
-
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

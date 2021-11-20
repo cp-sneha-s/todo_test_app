@@ -7,7 +7,8 @@ final String columnTitle = 'title';
 final String columnDone = 'done';
 
 class Task extends ChangeNotifier {
-  List<Task> taskList ;
+  List<Task> taskList;
+
   int id;
   bool done;
   String title;
@@ -30,27 +31,30 @@ class Task extends ChangeNotifier {
     title = map[columnTitle];
     done = map[columnDone] == 1;
   }
-  void toggleDone(bool done){
+  List<Task> getTaskList() {
+    DatabaseHelper.instance.getAllTasks().then((value) {
+      this.taskList = value;
+      notifyListeners();
+      print('got tasklist');
+    });
+    return taskList;
+  }
+
+  void toggleDone(bool done) {
     done = !done;
     notifyListeners();
   }
 
-  void addTask(String tasktitle){
-    DatabaseHelper.instance.insert(Task(done: false,title: tasktitle));
+  void addTask(String tasktitle) {
+    DatabaseHelper.instance.insert(Task(done: false, title: tasktitle));
     notifyListeners();
   }
 
- void deletetask(int index){
+  void deletetask(int index) {
     DatabaseHelper.instance.deleteTask(index);
+    taskList.removeAt(index);
     notifyListeners();
- }
-
-  List<Task> getTaskList(){
-    DatabaseHelper.instance.getAllTasks().then((value) {
-      this.taskList= value;
-      notifyListeners();
-      print ('got tasklist');
-    });      return taskList;
-
   }
+
+
 }

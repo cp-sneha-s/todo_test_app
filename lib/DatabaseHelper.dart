@@ -50,7 +50,7 @@ class DatabaseHelper {
     results.forEach((results) {
       Task task = Task.fromMap(results);
       tasks.add(task);
-      print('tasks');
+      // print('tasks');
     });
     return tasks;
   }

@@ -7,7 +7,6 @@ import 'AddTaskPage.dart';
 
 class ToDoPage extends StatelessWidget {
   List<Task> myList ;
-
   @override
   Widget build(BuildContext context) {
     myList = Provider.of<Task>(context).getTaskList();
@@ -29,12 +28,13 @@ class ToDoPage extends StatelessWidget {
         ),
         body: Consumer<Task>(builder: (context, task, child) {
           return ListView.builder(
-              itemCount:myList.length,
+              itemCount:task.getTaskList().length,
               itemBuilder: (BuildContext context, index) {
                 return Dismissible(
                   key: UniqueKey(),
                   onDismissed: (direction) {
-                    task.deletetask(index);
+                    (context).read<Task>().deletetask(index);
+                    // task.deletetask(index);
                     myList.removeAt(index);
                     },
                   background: Container(
@@ -42,7 +42,8 @@ class ToDoPage extends StatelessWidget {
                   ),
                   child: ListTile(
                     onTap: () {
-                      task.toggleDone(myList[index].done);
+                       // Provider.of<Task>(context).toggleDone(myList[index].done);
+                       print('Listtile tapped!');
                       },
                     title: myList[index].done
                         ? Text(
@@ -62,7 +63,7 @@ class ToDoPage extends StatelessWidget {
                     trailing: Checkbox(
                       value: myList[index].done,
                       onChanged: (bool value) {
-                        task.toggleDone(value);
+                        task.toggleDone(myList[index].done,);
                       },
                       activeColor: Colors.blueGrey,
                     ),
