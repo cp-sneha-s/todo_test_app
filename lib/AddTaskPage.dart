@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/DatabaseHelper.dart';
 import 'package:flutter_todo_app/Task.dart';
 import 'package:flutter_todo_app/ToDoPage.dart';
+import 'package:flutter_todo_app/task_view_model.dart';
 import 'package:provider/provider.dart';
 
 
@@ -79,7 +80,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     Container(
                       height: 40,
                       width: 150,
-                      child: Consumer<Task>(builder: (context, task, child) {
+                      child: Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
                         return ElevatedButton(
                             key: Key('add task button'),
                             style: ButtonStyle(
@@ -96,7 +97,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     });
                               } else {
                                 {
-                                  task.addTask(addTaskController.text.toString());
+                                  taskViewModel.addTask(addTaskController.text.toString());
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

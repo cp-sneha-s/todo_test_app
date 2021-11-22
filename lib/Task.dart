@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/DatabaseHelper.dart';
 
 final String tableTodo = 'todo';
@@ -7,7 +8,8 @@ final String columnTitle = 'title';
 final String columnDone = 'done';
 
 class Task extends ChangeNotifier {
-  List<Task> taskList;
+
+
 
   int id;
   bool done;
@@ -31,30 +33,7 @@ class Task extends ChangeNotifier {
     title = map[columnTitle];
     done = map[columnDone] == 1;
   }
-  List<Task> getTaskList() {
-    DatabaseHelper.instance.getAllTasks().then((value) {
-      this.taskList = value;
-      notifyListeners();
-      print('got tasklist');
-    });
-    return taskList;
-  }
 
-  void toggleDone(bool done) {
-    done = !done;
-    notifyListeners();
-  }
-
-  void addTask(String tasktitle) {
-    DatabaseHelper.instance.insert(Task(done: false, title: tasktitle));
-    notifyListeners();
-  }
-
-  void deletetask(int index) {
-    DatabaseHelper.instance.deleteTask(index);
-    taskList.removeAt(index);
-    notifyListeners();
-  }
 
 
 }

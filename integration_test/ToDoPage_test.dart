@@ -27,10 +27,6 @@ void main(){
         await tester.pumpAndSettle();
       expect(find.byType(AddTaskPage), findsOneWidget);
 
-      // final Finder cancelButton = find.byKey(Key('cancel button'));
-      // await tester.tap(cancelButton);
-      // await tester.pumpAndSettle(Duration(seconds: 1));
-      // expect(find.byType(AddTaskPage), findsOneWidget);
 
       final Finder addTask= find.byKey(Key('add task'));
         await tester.tap(addTask);
@@ -44,10 +40,18 @@ void main(){
       await tester.pumpAndSettle(Duration(seconds: 10));
 
       expect(find.byType(ToDoPage), findsOneWidget);
-      expect(find.byType(AddTaskPage), findsNothing);
+      // expect(find.byType(AddTaskPage), findsNothing);
+    });
+    testWidgets('Testing scrolling', (WidgetTester tester)async{
+      await tester.pumpWidget(MyApp());
+      await tester.pumpAndSettle();
+      await tester.pump(Duration(seconds: 3));
+      expect(find.byType(ToDoPage), findsOneWidget);
+      await tester.fling(find.byType(ListView), Offset(0,-200), 3000);
+      await tester.pumpAndSettle();
+      expect(find.byIcon(Icons.add), findsOneWidget);
 
-
-     });
+    });
 
   });
 }
