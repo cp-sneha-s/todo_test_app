@@ -7,7 +7,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_todo_app/DatabaseHelper.dart';
+import 'package:flutter_todo_app/Task.dart';
 import 'package:flutter_todo_app/ToDoPage.dart';
+import 'package:flutter_todo_app/task_view_model.dart';
+import 'package:sqflite_common/sqlite_api.dart';
 
 // import 'package:flutter_todo_app/main.dart';
 // import 'package:integration_test/integration_test.dart';
@@ -24,3 +28,41 @@ import 'package:flutter_todo_app/ToDoPage.dart';
 //     });
 //   });
 // }
+
+class dbtester implements TaskViewModel{
+  @override
+  DatabaseHelper dbInstance;
+
+  @override
+  List<Task> taskList;
+
+
+  @override
+  void addTask(Task task) {
+    // TODO: implement addTask
+  }
+
+  @override
+  void deletetask(int index) {
+    // TODO: implement deletetask
+  }
+
+  @override
+  List<Task> getTaskList() {
+    // TODO: implement getTaskList
+    throw UnimplementedError();
+  }
+
+
+
+  @override
+  void removeListener(VoidCallback listener) {
+    // TODO: implement removeListener
+  }
+
+  @override
+  void toggleDone(bool done) {
+    // TODO: implement toggleDone
+  }
+
+}

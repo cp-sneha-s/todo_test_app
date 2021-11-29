@@ -1,20 +1,20 @@
-
-
 import 'package:flutter/material.dart';
-
 import 'DatabaseHelper.dart';
 import 'Task.dart';
 
-class TaskViewModel extends ChangeNotifier{
-  DatabaseHelper dbInstance = DatabaseHelper.instance;
-  TaskViewModel({this.dbInstance});
+class TaskViewModel  {
+  DatabaseHelper dbInstance;
+  TaskViewModel( DatabaseHelper dbInstance ){
+    this.dbInstance= DatabaseHelper.instance;
+  }
+
+
   List<Task> taskList= [];
 
 
-  List<Task> getTaskList(List<Task> taskList) {
-    DatabaseHelper.instance.getAllTasks().then((value) {
-      this.taskList = value;
-      notifyListeners();
+  List<Task> getTaskList( List<Task> newList) {
+    dbInstance.getAllTasks().then((value) {
+     value.map((e) => newList.add(e));
       print('got tasklist');
       print(taskList.toString());
     });
@@ -23,19 +23,17 @@ class TaskViewModel extends ChangeNotifier{
 
   void toggleDone(bool done) {
     done = !done;
-    notifyListeners();
   }
 
-  void addTask(String tasktitle) {
- //   DatabaseHelper.instance.insert(Task(done: false, title: tasktitle));
-    taskList.add(Task(done: false,title: tasktitle));
-    notifyListeners();
 
+  void addTask (Task task){
+    DatabaseHelper.instance.insert(task);
+    taskList.add(task);
   }
 
   void deletetask(int index) {
-   // DatabaseHelper.instance.deleteTask(index);
-    taskList.removeAt(index);
-    notifyListeners();
+   DatabaseHelper.instance.deleteTask(index);
+     taskList.removeAt(index);
+
   }
 }

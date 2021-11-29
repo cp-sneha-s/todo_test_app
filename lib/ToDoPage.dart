@@ -14,15 +14,22 @@ class ToDoPage extends StatefulWidget {
 
 class _ToDoPageState extends State<ToDoPage> {
   List<Task> myList = [];
+  int count = 0;
+  TaskViewModel taskViewModel = TaskViewModel(DatabaseHelper.instance);
 
   @override
   void initState() {
     super.initState();
-    DatabaseHelper.instance.getAllTasks().then((myList) {
-      setState(() {
-        this.myList = myList;
-      });
-    });
+    setState(() {
+     myList = taskViewModel.getTaskList(myList);
+     });
+
+    // DatabaseHelper.instance.getAllTasks().then((myList) {
+    //   setState(() {
+    //     this.myList = myList;
+    //     count  = myList.length;
+    //   });
+    // });
   }
 
   @override
@@ -42,15 +49,14 @@ class _ToDoPageState extends State<ToDoPage> {
           backgroundColor: Colors.blueGrey,
           child: Icon(Icons.add),
         ),
-        body: Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
-          return ListView.builder(
+        body:ListView.builder(
               itemCount: myList.length,
               itemBuilder: (BuildContext context, index) {
                 return Dismissible(
                   key: UniqueKey(),
                   onDismissed: (direction) {
                     setState(() {
-                      taskViewModel.deletetask(myList[index].id);
+                     DatabaseHelper.instance.deleteTask(myList[index].id);
                       myList.removeAt(index);
 
                       print(myList[index].id.toString());
@@ -62,7 +68,6 @@ class _ToDoPageState extends State<ToDoPage> {
                   ),
                   child: ListTile(
                     onTap: () {
-                      taskViewModel.toggleDone(myList[index].done);
                       setState(() {
                         final newvalue = !myList[index].done;
                         myList[index].done = newvalue;
@@ -94,9 +99,9 @@ class _ToDoPageState extends State<ToDoPage> {
                     ),
                   ),
                 );
-              });
-        }),
-      ),
+              }),
+        ),
+
     );
   }
 }

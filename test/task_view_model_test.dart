@@ -11,31 +11,28 @@ import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 
-class MockitoDatabase extends Mock implements DatabaseHelper{}
 
-TaskViewModel taskVM;
-Widget createMainScreen()=> ChangeNotifierProvider<TaskViewModel>(
-    create: (context){
-      taskVM = TaskViewModel();
-      return taskVM;
-    },
-child: MaterialApp(
-  home: ToDoPage(),
-),);
-
-void add(){
-  taskVM.addTask('go to gym');
-  taskVM.addTask('running');
-  taskVM.addTask('cycling');
-}
 
 
 void main(){
+  TaskViewModel taskVm;
+ MockitoDatabase mockitodb;
+
+  setUp((){
+    mockitodb = MockitoDatabase();
+    taskVm= TaskViewModel(mockitodb);
+
+  });
   group('Testing ToDo App', (){
     test('A new item should be added',(){
-      add();
       Task newTask = Task(done: false,title: 'go to gym');
-      expect(taskVM.taskList.contains(newTask), true);
+      taskVm.addTask(newTask);
+      expect(taskVm.taskList.contains(newTask), true);
+      taskVm.deletetask(newTask.id);
+      expect(taskVm.taskList.contains(newTask), false);
+    });
+    test('item should be delete from list', (){
+      when(taskVm.getTaskList(),)
     });
   });
 }

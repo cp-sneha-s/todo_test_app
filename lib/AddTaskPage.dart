@@ -80,8 +80,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     Container(
                       height: 40,
                       width: 150,
-                      child: Consumer<TaskViewModel>(builder: (context, taskViewModel, child) {
-                        return ElevatedButton(
+                      child:ElevatedButton(
                             key: Key('add task button'),
                             style: ButtonStyle(
                                 backgroundColor:
@@ -97,7 +96,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                     });
                               } else {
                                 {
-                                  taskViewModel.addTask(addTaskController.text.toString());
+                                  Task task = Task(title: addTaskController.text,done: false);
+                             DatabaseHelper.instance.insert(task);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -113,9 +113,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20.0,
                               ),
-                            ));
-                      }),
-                    ),
+                            )),
+                      ),
                   ],
                 ),
               ),
