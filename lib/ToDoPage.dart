@@ -2,10 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/Task.dart';
 import 'package:flutter_todo_app/task_view_model.dart';
-import 'package:provider/provider.dart';
-
 import 'AddTaskPage.dart';
-import 'DatabaseHelper.dart';
 
 class ToDoPage extends StatefulWidget {
   @override
@@ -13,23 +10,24 @@ class ToDoPage extends StatefulWidget {
 }
 
 class _ToDoPageState extends State<ToDoPage> {
-  List<Task> myList = [];
+  List<Task> myList =[];
+
   int count = 0;
-  TaskViewModel taskViewModel = TaskViewModel(DatabaseHelper.instance);
+ TaskViewModel taskViewModel = TaskViewModel();
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-     myList = taskViewModel.getTaskList(myList);
-     });
-
-    // DatabaseHelper.instance.getAllTasks().then((myList) {
-    //   setState(() {
-    //     this.myList = myList;
-    //     count  = myList.length;
-    //   });
+    // setState(() {
+    //   myList = TaskViewModel.taskViewModel.taskList;
+    //   print(myList.length);
     // });
+
+    // setState(() {
+    //   myList = taskViewModel.taskList;
+    //   print(myList.length.toString());
+    // });
+
   }
 
   @override
@@ -49,59 +47,58 @@ class _ToDoPageState extends State<ToDoPage> {
           backgroundColor: Colors.blueGrey,
           child: Icon(Icons.add),
         ),
-        body:ListView.builder(
-              itemCount: myList.length,
-              itemBuilder: (BuildContext context, index) {
-                return Dismissible(
-                  key: UniqueKey(),
-                  onDismissed: (direction) {
-                    setState(() {
-                     DatabaseHelper.instance.deleteTask(myList[index].id);
-                      myList.removeAt(index);
+        body: ListView.builder(
+            itemCount: taskViewModel.taskList.length,
+            itemBuilder: (BuildContext context, index) {
+              return Dismissible(
+                key: UniqueKey(),
+                onDismissed: (direction) {
+                  setState(() {
+                    taskViewModel.deletetask(taskViewModel.taskList[index].id);
+                    taskViewModel.taskList.removeAt(index);
 
-                      print(myList[index].id.toString());
-                      print(index.toString());
+                    print(taskViewModel.taskList[index].id.toString());
+                    print(index.toString());
+                  });
+                },
+                background: Container(
+                  color: Colors.blueGrey,
+                ),
+                child: ListTile(
+                  onTap: () {
+                    setState(() {
+                      final newvalue = !taskViewModel.taskList[index].done;
+                      taskViewModel.taskList[index].done = newvalue;
                     });
                   },
-                  background: Container(
-                    color: Colors.blueGrey,
-                  ),
-                  child: ListTile(
-                    onTap: () {
+                  title: taskViewModel.taskList[index].done
+                      ? Text(
+                    taskViewModel.taskList[index].title,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              decoration: TextDecoration.lineThrough),
+                        )
+                      : Text(
+                    taskViewModel.taskList[index].title,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                  trailing: Checkbox(
+                    value: taskViewModel.taskList[index].done,
+                    onChanged: (bool value) {
                       setState(() {
-                        final newvalue = !myList[index].done;
-                        myList[index].done = newvalue;
+                        taskViewModel.taskList[index].done = value;
                       });
                     },
-                    title: myList[index].done
-                        ? Text(
-                            myList[index].title,
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                decoration: TextDecoration.lineThrough),
-                          )
-                        : Text(
-                            myList[index].title,
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                    trailing: Checkbox(
-                      value: myList[index].done,
-                      onChanged: (bool value) {
-                        setState(() {
-                          myList[index].done = value;
-                        });
-                      },
-                      activeColor: Colors.blueGrey,
-                    ),
+                    activeColor: Colors.blueGrey,
                   ),
-                );
-              }),
-        ),
-
+                ),
+              );
+            }),
+      ),
     );
   }
 }

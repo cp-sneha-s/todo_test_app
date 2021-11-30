@@ -4,17 +4,18 @@ import 'Task.dart';
 
 class TaskViewModel  {
   DatabaseHelper dbInstance;
-  TaskViewModel( DatabaseHelper dbInstance ){
-    this.dbInstance= DatabaseHelper.instance;
-  }
-
-
   List<Task> taskList= [];
 
+  //static final TaskViewModel taskViewModel = TaskViewModel();
 
-  List<Task> getTaskList( List<Task> newList) {
-    dbInstance.getAllTasks().then((value) {
-     value.map((e) => newList.add(e));
+  TaskViewModel(){
+    this.dbInstance= DatabaseHelper.instance;
+    taskList = this.getTaskList();
+  }
+
+  List<Task> getTaskList() {
+    DatabaseHelper.instance.getAllTasks().then((value) {
+     this.taskList = value;
       print('got tasklist');
       print(taskList.toString());
     });
@@ -27,13 +28,10 @@ class TaskViewModel  {
 
 
   void addTask (Task task){
-    DatabaseHelper.instance.insert(task);
-    taskList.add(task);
+    dbInstance.insert(task);
   }
 
   void deletetask(int index) {
-   DatabaseHelper.instance.deleteTask(index);
-     taskList.removeAt(index);
-
+   dbInstance.deleteTask(index);
   }
 }

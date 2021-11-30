@@ -4,8 +4,6 @@ import 'package:flutter_todo_app/DatabaseHelper.dart';
 import 'package:flutter_todo_app/Task.dart';
 import 'package:flutter_todo_app/ToDoPage.dart';
 import 'package:flutter_todo_app/task_view_model.dart';
-import 'package:provider/provider.dart';
-
 
 class AddTaskPage extends StatefulWidget {
   @override
@@ -14,7 +12,7 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final addTaskController = TextEditingController();
-
+  TaskViewModel taskViewModel = TaskViewModel();
 
   @override
   void dispose() {
@@ -80,41 +78,41 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     Container(
                       height: 40,
                       width: 150,
-                      child:ElevatedButton(
-                            key: Key('add task button'),
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.blueGrey)),
-                            onPressed: () {
-                              if (addTaskController.text.isEmpty) {
-                                return showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: Text('Please enter task'),
-                                      );
-                                    });
-                              } else {
-                                {
-                                  Task task = Task(title: addTaskController.text,done: false);
-                             DatabaseHelper.instance.insert(task);
+                      child: ElevatedButton(
+                          key: Key('add task button'),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.blueGrey)),
+                          onPressed: () {
+                            if (addTaskController.text.isEmpty) {
+                              return showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Text('Please enter task'),
+                                    );
+                                  });
+                            } else {
+                              {
+                                Task task = Task(title: addTaskController.text, done: false);
+                                  taskViewModel.addTask(task);
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ToDoPage(),
-                                    ),
-                                  );
-                                }
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ToDoPage(),
+                                  ),
+                                );
                               }
-                            },
-                            child: Text(
-                              'ADD',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0,
-                              ),
-                            )),
-                      ),
+                            }
+                          },
+                          child: Text(
+                            'ADD',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                          )),
+                    ),
                   ],
                 ),
               ),
