@@ -4,6 +4,7 @@ import 'package:flutter_todo_app/DatabaseHelper.dart';
 import 'package:flutter_todo_app/Task.dart';
 import 'package:flutter_todo_app/ToDoPage.dart';
 import 'package:flutter_todo_app/task_view_model.dart';
+import 'package:provider/provider.dart';
 
 class AddTaskPage extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class AddTaskPage extends StatefulWidget {
 
 class _AddTaskPageState extends State<AddTaskPage> {
   final addTaskController = TextEditingController();
-  TaskViewModel taskViewModel = TaskViewModel();
+  TaskViewModel taskViewModel = TaskViewModel(DatabaseHelper.instance);
 
   @override
   void dispose() {
@@ -95,13 +96,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                             } else {
                               {
                                 Task task = Task(title: addTaskController.text, done: false);
-                                  taskViewModel.addTask(task);
-                                  Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ToDoPage(),
-                                  ),
-                                );
+                                Provider.of<TaskViewModel>(context,listen: false).addTask(task);
+                               Navigator.pop(context);
+
                               }
                             }
                           },

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/DatabaseHelper.dart';
 import 'package:flutter_todo_app/Task.dart';
 import 'package:flutter_todo_app/task_view_model.dart';
+import 'package:provider/provider.dart';
 import 'AddTaskPage.dart';
 
 class ToDoPage extends StatefulWidget {
@@ -10,26 +12,6 @@ class ToDoPage extends StatefulWidget {
 }
 
 class _ToDoPageState extends State<ToDoPage> {
-  List<Task> myList =[];
-
-  int count = 0;
- TaskViewModel taskViewModel = TaskViewModel();
-
-  @override
-  void initState() {
-    super.initState();
-    // setState(() {
-    //   myList = TaskViewModel.taskViewModel.taskList;
-    //   print(myList.length);
-    // });
-
-    // setState(() {
-    //   myList = taskViewModel.taskList;
-    //   print(myList.length.toString());
-    // });
-
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -47,57 +29,70 @@ class _ToDoPageState extends State<ToDoPage> {
           backgroundColor: Colors.blueGrey,
           child: Icon(Icons.add),
         ),
-        body: ListView.builder(
-            itemCount: taskViewModel.taskList.length,
-            itemBuilder: (BuildContext context, index) {
-              return Dismissible(
-                key: UniqueKey(),
-                onDismissed: (direction) {
-                  setState(() {
-                    taskViewModel.deletetask(taskViewModel.taskList[index].id);
-                    taskViewModel.taskList.removeAt(index);
-
-                    print(taskViewModel.taskList[index].id.toString());
-                    print(index.toString());
-                  });
-                },
-                background: Container(
-                  color: Colors.blueGrey,
-                ),
-                child: ListTile(
-                  onTap: () {
-                    setState(() {
-                      final newvalue = !taskViewModel.taskList[index].done;
-                      taskViewModel.taskList[index].done = newvalue;
-                    });
-                  },
-                  title: taskViewModel.taskList[index].done
-                      ? Text(
-                    taskViewModel.taskList[index].title,
-                          style: TextStyle(
-                              fontSize: 20,
+        body: Consumer<TaskViewModel>(
+          builder: (context,taskviewModel,child){
+          return  FutureBuilder(
+            future: taskviewModel.getTaskList(),
+            builder: (context,snapshot){
+              List<Task>  list = snapshot.data;
+              if (snapshot.hasData){
+               return ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (BuildContext context, index) {
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) {
+                          setState(() {
+                            taskviewModel.deletetask(list[index].id);
+                          //  list.removeAt(index);
+                          });
+                        },
+                        background: Container(
+                          color: Colors.blueGrey,
+                        ),
+                        child: ListTile(
+                          onTap: () {
+                            setState(() {
+                              final newvalue = !list[index].done;
+                              list[index].done = newvalue;
+                            });
+                          },
+                          title: list[index].done
+                              ? Text(
+                            list[index].title,
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                decoration: TextDecoration.lineThrough),
+                          )
+                              : Text(
+                            list[index].title,
+                            style: TextStyle(
+                              fontSize: 20.0,
                               fontWeight: FontWeight.w400,
-                              decoration: TextDecoration.lineThrough),
-                        )
-                      : Text(
-                    taskViewModel.taskList[index].title,
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          trailing: Checkbox(
+                            value: list[index].done,
+                            onChanged: (bool value) {
+                              setState(() {
+                                list[index].done = value;
+                              });
+                            },
+                            activeColor: Colors.blueGrey,
                           ),
                         ),
-                  trailing: Checkbox(
-                    value: taskViewModel.taskList[index].done,
-                    onChanged: (bool value) {
-                      setState(() {
-                        taskViewModel.taskList[index].done = value;
-                      });
-                    },
-                    activeColor: Colors.blueGrey,
-                  ),
-                ),
-              );
-            }),
+                      );
+                    });
+              }else{
+                throw Exception('Failed to load data');
+              }
+            },
+
+          );
+          }
+
+        ),
       ),
     );
   }
